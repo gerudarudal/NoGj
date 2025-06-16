@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>매매일지</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body class="is-preload">
+
+    <div id="wrapper">
+
+        <div id="main">
+            <div class="inner">
+
+                <header id="header">
+                    <a href="Main.html" class="logo"><strong>www.NOGJ.com</strong></a>
+                </header>
+
+                <section>
+                    <header class="major">
+                        <h2>매매일지 작성/수정/삭제</h2>
+                    </header>
+                    
+                    <form id="trade-form">
+                        <div class="row gtr-uniform">
+                            <div class="col-12">
+                                <label for="date">날짜</label>
+                                <input type="date" id="date" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="symbol">종목명</label>
+                                <input type="text" id="symbol" placeholder="예: 삼성전자" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="type">매수/매도</label>
+                                <select id="type">
+                                    <option value="Buy">매수</option>
+                                    <option value="Sell">매도</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="quantity">수량</label>
+                                <input type="number" id="quantity" placeholder="0" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="price">가격</label>
+                                <input type="number" id="price" placeholder="0" step="0.01" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="memo">메모</label>
+                                <textarea id="memo" placeholder="매매 근거, 시장 상황 등을 기록하세요." rows="4"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <input type="hidden" id="editIndex">
+                                <ul class="actions">
+                                    <li><button type="submit" class="primary">저장하기</button></li>
+                                    <li><button type="reset">초기화</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="major" />
+
+                    <h3>📝 저장된 매매일지</h3>
+                    <ul id="diary-list" class="alt"></ul>
+
+                </section>
+
+            </div>
+        </div>
+
+		<div id="sidebar">
+			<div class="inner">
+
+				<nav id="menu">
+					<header class="major">
+						<h2>Menu</h2>
+					</header>
+					<ul>
+						<li><a href="Main.html">홈</a></li>
+						<li><a href="Website_Introduction.html">소개</a></li>
+						<li>
+							<span class="opener">주식</span>
+							<ul>
+								<li><a href="stock_1.html">주식의 정의</a></li>
+								<li><a href="stock_2.html">주식시장의 구조</a></li>
+								<li><a href="stock_3.html">거래 시간</a></li>
+								<li><a href="stock_4.html">주식의 분석</a></li>
+							</ul>						
+						<li>
+							<span class="opener">기본적분석</span>
+							<ul>
+								<li><a href="Fundamental_1.html">투자지표</a></li>
+								<li><a href="Fundamental_2.html">실적</a></li>
+								<li><a href="Fundamental_3.html">재무</a></li>
+							</ul>
+						<li>
+							<span class="opener">기술적분석</span>
+							<ul>
+								<li><a href="Technical_1.html">캔들</a></li>
+								<li><a href="Technical_2.html">거래량, 거래대금</a></li>						
+								<li><a href="Technical_3.html">이동평균선</a></li>
+								<li><a href="Technical_4.html">지지와저항</a></li>
+							</ul>
+						</li>
+						<li>
+							<span class="opener">경제 지표</span>
+							<ul>
+								<li><a href="Economic_1.html">금리</a></li>
+								<li><a href="Economic_2.html">환율</a></li>
+								<li><a href="Economic_3.html">지수</a></li>
+							</ul>
+						</li>
+						<li><a href="diary.html">매매일지</a></li>
+					</ul>
+				</nav>
+
+				<section>
+					<header class="major">
+						<h2>Get in touch</h2>
+					</header>
+					<p> 궁금한 점이 있다면 언제든지 연락주세요. </p>
+					<ul class="contact">
+						<li class="icon solid fa-envelope">ehddlf7130@cau.ac.kr<br> hu14776@gmail.com</li>
+						<li class="icon solid fa-phone">010-4852-7130<br> 010-3278-9994</li>
+						<li class="icon solid fa-home">중앙대학교 예술공학부 표준웹테크놀로지<br>1분반 외화를 벌어오는 영웅호걸팀</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+	</div>
+
+    <script>
+      const form = document.getElementById('trade-form');
+      const diaryList = document.getElementById('diary-list');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const date = document.getElementById('date').value;
+        const symbol = document.getElementById('symbol').value;
+        const type = document.getElementById('type').value;
+        const quantity = document.getElementById('quantity').value;
+        const price = document.getElementById('price').value;
+        const memo = document.getElementById('memo').value;
+        const editIndex = document.getElementById('editIndex').value;
+
+        let entries = JSON.parse(localStorage.getItem('tradeDiary') || '[]');
+
+        const entry = { date, symbol, type, quantity, price, memo };
+
+        if (editIndex === '') {
+          entries.push(entry);
+        } else {
+          entries[editIndex] = entry;
+        }
+
+        localStorage.setItem('tradeDiary', JSON.stringify(entries));
+
+        alert(editIndex === '' ? '저장 완료!' : '수정 완료!');
+        form.reset();
+        document.getElementById('editIndex').value = '';
+        displayDiary();
+      });
+
+      function displayDiary() {
+        const entries = JSON.parse(localStorage.getItem('tradeDiary') || '[]');
+        diaryList.innerHTML = '';
+
+        entries.forEach((entry, index) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <strong>${entry.date}</strong> | ${entry.symbol} (${entry.type}) - ${entry.quantity}주 @ ${entry.price}원<br>
+            <p style="margin: 0.5em 0;">${entry.memo.replace(/\n/g, '<br>') || ''}</p>
+            <ul class="actions">
+                <li><button onclick="editEntry(${index})" class="button small">수정</button></li>
+                <li><button onclick="deleteEntry(${index})" class="button small">삭제</button></li>
+            </ul>
+          `;
+          diaryList.appendChild(li);
+        });
+      }
+
+      function deleteEntry(index) {
+        if (confirm('이 항목을 삭제할까요?')) {
+          let entries = JSON.parse(localStorage.getItem('tradeDiary') || '[]');
+          entries.splice(index, 1);
+          localStorage.setItem('tradeDiary', JSON.stringify(entries));
+          displayDiary();
+        }
+      }
+
+      function editEntry(index) {
+        const entries = JSON.parse(localStorage.getItem('tradeDiary') || '[]');
+        const entry = entries[index];
+
+        document.getElementById('date').value = entry.date;
+        document.getElementById('symbol').value = entry.symbol;
+        document.getElementById('type').value = entry.type;
+        document.getElementById('quantity').value = entry.quantity;
+        document.getElementById('price').value = entry.price;
+        document.getElementById('memo').value = entry.memo;
+        document.getElementById('editIndex').value = index;
+
+        window.scrollTo(0, 0);
+      }
+
+      displayDiary();
+    </script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
